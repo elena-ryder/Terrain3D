@@ -52,22 +52,34 @@ RID Terrain3DMesher::_generate_mesh(const Vector2i &p_size, const bool p_standar
 		}
 	}
 
-	// Generate indices with center vertex per quad (4 triangles per quad)
+	// Generate indices for quads, alternating diagonal direction to form a diamond pattern
 	for (int y = 0; y < p_size.y; ++y) {
-		for (int x = 0; x < p_size.x; ++x) {
-			int bottomLeft  = y * (p_size.x + 1) + x;
-			int bottomRight = bottomLeft + 1;
-			int topLeft     = (y + 1) * (p_size.x + 1) + x;
-			int topRight    = topLeft + 1;
-
-			int center = vertices.size();
-			vertices.push_back(Vector3(x + 0.5f, 0.f, y + 0.5f));
-
-			indices.push_back(bottomLeft);  indices.push_back(bottomRight); indices.push_back(center);
-			indices.push_back(bottomRight); indices.push_back(topRight);    indices.push_back(center);
-			indices.push_back(topRight);    indices.push_back(topLeft);     indices.push_back(center);
-			indices.push_back(topLeft);     indices.push_back(bottomLeft);  indices.push_back(center);
-		}
+	    for (int x = 0; x < p_size.x; ++x) {
+	        int bottomLeft = y * (p_size.x + 1) + x;
+	        int bottomRight = bottomLeft + 1;
+	        int topLeft = (y + 1) * (p_size.x + 1) + x;
+	        int topRight = topLeft + 1;
+	
+	        if (p_standard_grid || (x + y) % 2 == 0) {
+	            // Diagonal: bottomLeft -> topRight
+	            indices.push_back(bottomLeft);
+	            indices.push_back(bottomRight);
+	            indices.push_back(topRight);
+	
+	            indices.push_back(bottomLeft);
+	            indices.push_back(topRight);
+	            indices.push_back(topLeft);
+	        } else {
+	            // Diagonal: bottomRight -> topLeft
+	            indices.push_back(bottomLeft);
+	            indices.push_back(bottomRight);
+	            indices.push_back(topLeft);
+	
+	            indices.push_back(bottomRight);
+	            indices.push_back(topRight);
+	            indices.push_back(topLeft);
+	        }
+	    }
 	}
 
 	return _instantiate_mesh(vertices, indices, aabb);
