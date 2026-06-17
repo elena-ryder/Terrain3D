@@ -31,7 +31,7 @@ void Terrain3DMesher::_generate_mesh_types() {
 	// # 6 STANDARD_TRIM_B - (mesh_size * 4 + 2) by 2 strips for LOD0 +-X axis edge
 	_mesh_rids.push_back(_generate_mesh(Vector2i(_mesh_size * 4 + 2, 2), true));
 	// # 7 STANDARD_TILE - mesh_size x mesh_size tiles
-	_mesh_rids.push_back(_generate_mesh(Vector2i(_mesh_size, _mesh_size), true));
+	_mesh_rids.push_back(_generate_mesh(Vector2i(_mesh_size, _mesh_size), false));
 	// # 8 STANDARD_EDGE_A - 2 by (mesh_size * 4 + 8) strips to bridge LOD transitions along +-Z axis
 	_mesh_rids.push_back(_generate_mesh(Vector2i(2, _mesh_size * 4 + 8), true));
 	// # 9 STANDARD_EDGE_B - (mesh_size * 4 + 4) by 2 strips to bridge LOD transitions along +-X axis
