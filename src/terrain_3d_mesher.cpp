@@ -61,22 +61,15 @@ RID Terrain3DMesher::_generate_mesh(const Vector2i &p_size, const bool p_standar
 			int topLeft = (y + 1) * (p_size.x + 1) + x;
 			int topRight = topLeft + 1;
 
-			if ((x + y) % 2 == 0 || p_standard_grid) {
-				indices.push_back(bottomLeft);
-				indices.push_back(topRight);
-				indices.push_back(topLeft);
-
-				indices.push_back(bottomLeft);
-				indices.push_back(bottomRight);
-				indices.push_back(topRight);
-			} else {
-				indices.push_back(bottomLeft);
-				indices.push_back(bottomRight);
-				indices.push_back(topLeft);
-
-				indices.push_back(topLeft);
-				indices.push_back(bottomRight);
-				indices.push_back(topRight);
+			// Add center vertex for this quad
+			int center = vertices.size();
+			vertices.push_back(Vector3(x + 0.5f, 0.f, y + 0.5f));
+			
+			// 4 triangles meeting at center
+			indices.push_back(bottomLeft);  indices.push_back(bottomRight); indices.push_back(center);
+			indices.push_back(bottomRight); indices.push_back(topRight);    indices.push_back(center);
+			indices.push_back(topRight);    indices.push_back(topLeft);     indices.push_back(center);
+			indices.push_back(topLeft);     indices.push_back(bottomLeft);  indices.push_back(center);
 			}
 		}
 	}
