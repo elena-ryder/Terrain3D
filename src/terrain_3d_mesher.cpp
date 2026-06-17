@@ -45,32 +45,28 @@ RID Terrain3DMesher::_generate_mesh(const Vector2i &p_size, const bool p_standar
 	AABB aabb = AABB(V3_ZERO, Vector3(p_size.x, 0.1f, p_size.y));
 	LOG(DEBUG, "Generating verticies and indices for a", p_standard_grid ? " symmetric " : " standard ", "grid mesh of width: ", p_size.x, " and height: ", p_size.y);
 
-	// Generate vertices
+	// Generate corner vertices
 	for (int y = 0; y <= p_size.y; ++y) {
 		for (int x = 0; x <= p_size.x; ++x) {
-			// Match GDScript vertex definitions
-			vertices.push_back(Vector3(x, 0.f, y)); // bottom-left
+			vertices.push_back(Vector3(x, 0.f, y));
 		}
 	}
 
-	// Generate indices for quads with alternating diagonals
+	// Generate indices with center vertex per quad (4 triangles per quad)
 	for (int y = 0; y < p_size.y; ++y) {
 		for (int x = 0; x < p_size.x; ++x) {
-			int bottomLeft = y * (p_size.x + 1) + x;
+			int bottomLeft  = y * (p_size.x + 1) + x;
 			int bottomRight = bottomLeft + 1;
-			int topLeft = (y + 1) * (p_size.x + 1) + x;
-			int topRight = topLeft + 1;
+			int topLeft     = (y + 1) * (p_size.x + 1) + x;
+			int topRight    = topLeft + 1;
 
-			// Add center vertex for this quad
 			int center = vertices.size();
 			vertices.push_back(Vector3(x + 0.5f, 0.f, y + 0.5f));
-			
-			// 4 triangles meeting at center
+
 			indices.push_back(bottomLeft);  indices.push_back(bottomRight); indices.push_back(center);
 			indices.push_back(bottomRight); indices.push_back(topRight);    indices.push_back(center);
 			indices.push_back(topRight);    indices.push_back(topLeft);     indices.push_back(center);
 			indices.push_back(topLeft);     indices.push_back(bottomLeft);  indices.push_back(center);
-			}
 		}
 	}
 
